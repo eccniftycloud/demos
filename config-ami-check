@@ -1,0 +1,54 @@
+import boto3
+import json
+
+def lambda_handler(event, context):
+
+    # Create an EC2 client
+    ec2 = boto3.client("ec2")
+
+    # Call the EC2 client's describe_images method to get a list of all available AMIs
+    response = ec2.describe_images(Owners=["amazon"], Filters=[{"Name": "name", "Values": ["Ubuntu_*"]}])
+
+    # Sort the AMIs in descending order by creation date
+    images = sorted(response["Images"], key=lambda x: x["CreationDate"], reverse=True)
+
+    # Get the latest AMI ID
+    latest_ami = images[0]["ImageId"]
+
+    #Print the current AMI ID
+    print(f"Latest AMI: {latest_ami}")
+
+    # Extract the AMI ID from the response
+    #latest_ami = response['Images'][0]['ImageId']
+
+    # Define the Config rule InputParameters using the latest AMI ID variable
+    input_params = {
+        'amiIds':latest_ami
+    }
+
+    # Convert the InputParameters dictionary to a JSON string
+    input_params_json = json.dumps(input_params)
+
+
+    # Define the Config rule
+    config_rule = {
+    'ConfigRuleName': 'approved-amis-by-id',
+    'Description': 'Checks for the latest Gold AMI compliance, Go DarkKnights!',
+    'Scope': {
+        'ComplianceResourceTypes': ['AWS::EC2::Instance']
+    },
+    'Source': {
+        'Owner': 'AWS',
+        'SourceIdentifier': 'APPROVED_AMIS_BY_ID'
+    },
+    'InputParameters': input_params_json
+    }
+
+    # Create an AWS Config client
+    config_client = boto3.client('config')
+
+    # Put the Config rule
+    response = config_client.put_config_rule(ConfigRule=config_rule)
+
+# Print the response
+    print(response)
