@@ -7,7 +7,7 @@ provider "aws" {
   region = "us-east-2"
 
   assume_role {
-    role_arn = var.role_arn
+    role_arn = var.TF_VAR_role_arn
   }
 }
 
