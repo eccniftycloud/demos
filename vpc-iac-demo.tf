@@ -1,7 +1,6 @@
 # Provider
  provider "aws" {
    
-   #profile = "userprofile" ###or Keys, use a secrets manager like vault###
    region = "us-east-2"
  }
 ###MY VPC Demo Infrastructure-as-code by Ernest###
