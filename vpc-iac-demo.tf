@@ -1,4 +1,5 @@
-variable "TF_VAR_role_arn" {
+# Define the ARN of the IAM role to assume
+variable "role_arn" {
   description = "The ARN of the IAM role to assume"
   type        = string
 }
@@ -7,7 +8,7 @@ provider "aws" {
   region = "us-east-2"
 
   assume_role {
-    role_arn = var.TF_VAR_role_arn
+    role_arn = var.role_arn
   }
 }
 
