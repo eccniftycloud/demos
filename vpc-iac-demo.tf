@@ -1,4 +1,4 @@
-variable "role_arn" {
+variable "TF_VAR_role_arn" {
   description = "The ARN of the IAM role to assume"
   type        = string
 }
