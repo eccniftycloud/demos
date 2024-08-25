@@ -1,8 +1,17 @@
-# Provider
- provider "aws" {
-   
-   region = "us-east-2"
- }
+variable "role_arn" {
+  description = "The ARN of the IAM role to assume"
+  type        = string
+}
+
+provider "aws" {
+  region = "us-east-2"
+
+  assume_role {
+    role_arn = var.role_arn
+  }
+}
+
+
 ###MY VPC Demo Infrastructure-as-code by Ernest###
 ###creates VPC With a Public Subnet, Routing Tables, IGW, SG, EC2-WORDPRESS###
 # Create the VPC
